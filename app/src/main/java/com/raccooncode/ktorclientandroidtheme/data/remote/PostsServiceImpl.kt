@@ -1,5 +1,6 @@
 package com.raccooncode.ktorclientandroidtheme.data.remote
 
+import android.util.Log
 import com.raccooncode.ktorclientandroidtheme.data.remote.dto.PostRequest
 import com.raccooncode.ktorclientandroidtheme.data.remote.dto.PostResponse
 import io.ktor.client.HttpClient
@@ -14,6 +15,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.contentType
 import io.ktor.http.ContentType
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PostsServiceImpl(
@@ -47,7 +49,9 @@ class PostsServiceImpl(
                 contentType(ContentType.Application.Json)
                 setBody(postRequest)
             }
-            Json.decodeFromString(result.toString())
+            val body = result.body<PostResponse>()
+            Log.d("something", body.toString())
+            body
         } catch(e: RedirectResponseException) {
             // 3xx response
             println("Error ${e.response.status.description}")
